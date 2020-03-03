@@ -28,4 +28,4 @@ This is framework is based on requests multitheads, which is blocked.
 Considering to refactor it,with aiohttp asyncio, welcome to send issue,requirements. sevenqsh@gmail.com
 
 ----
-Thank zhangxf55 for contribute a lot.
+Thank zhangxf55、tianl4 for contribute a lot.
