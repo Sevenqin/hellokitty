@@ -1,0 +1,58 @@
+<?php
+    @set_time_limit(0);
+    @error_reporting(0);
+    function check($file) {
+        $result = false;
+        $sample = @file_get_contents($file);
+        $regexps = array("/(eval|assert)\(\$_(POST|GET|REQUEST)\[.+\]\)/",
+                        "/base64_decode|call_user_func/",
+                        "/exec\(|system\(|passthru\(|eval\(|assert\(|str_rot13\(|usleep\(/",
+                        "/`.*(system|ifconfig|pwd|cat|curl).*`/",
+                        "/\"\/.+\/([imsxeADSUXu]*e[imsxeADSUXu]*)\"/",
+                        "/create_function\(/",
+                        "/('|\")e((\"|')\.(\"|'))*v((\"|')\.(\"|'))*a((\"|')\.(\"|'))*l('|\")/",
+                        "/(\"|')a((\"|')\.(\"|'))*s((\"|')\.(\"|'))*s((\"|')\.(\"|'))*e((\"|')\.(\"|'))r((\"|')\.(\"|'))*t(\"|')/",
+                        "/((('|\")[a-z]{1,3}('|\")|char\(\d+\))\.){2,}(('|\")[a-z]{1,3}('|\")|char\(\d+\))/",
+                        "/('|\")b(('|\")\.('|\"))*a(('|\")\.('|\"))*s(('|\")\.('|\"))*e(('|\")\.('|\"))*6(('|\")\.('|\"))*4(('|\")\.('|\"))*_(('|\")\.('|\"))*d(('|\")\.('|\"))*e(('|\")\.('|\"))*c(('|\")\.('|\"))*o(('|\")\.('|\"))*d(('|\")\.('|\"))*e('|\")/",
+                        "/('|\")a(('|\")\.('|\"))*r(('|\")\.('|\"))*r(('|\")\.('|\"))*a(('|\")\.('|\"))*y(('|\")\.('|\"))*_(('|\")\.('|\"))*w(('|\")\.('|\"))*a(('|\")\.('|\"))*l(('|\")\.('|\"))*k('|\")/",
+                        "/\$\{.+\}/"
+                    );
+        foreach($regexps as $regexp) {
+            $matches = "";
+            if(preg_match($regexp, $sample, $matches)) {
+                return true;
+            }
+        }
+        return $result;
+    }
+
+    function inList($file, $white_list) {
+        foreach($white_list as $item) {
+            if($file === $item) return true;
+        }
+        return false;
+    }
+
+    function clear_dir($dir_path, $white_list) {
+        foreach(glob("$dir_path/*") as $item) {
+            $item = str_replace("\\","/",$item);
+            if(is_dir($item)) {
+                clear_dir($item, $white_list);
+            }
+            else {
+                if(preg_match("/\.(php|phar|jpg|png|gif|txt|css)$/i",$item)) {
+                    if(!inList($item, $white_list) && check($item)) {
+                        unlink($item);
+                        echo '<p>delete: '.$item."</ p>";
+                        continue;
+                    }
+                }
+            }
+        }
+    }
+
+    if($_POST[data]) {
+        clear_dir('%(root)s', split(";",$_POST[data]));
+        unlink(__FILE__);
+    }
+?>

