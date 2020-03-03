@@ -6,8 +6,6 @@ import json
 import logging
 import requests
 import threadpool
-
-# from modules.encrypt.rsatool import rsatool
 from modules.sitemap.mapper import loadmap
 
 class Configuration(object):

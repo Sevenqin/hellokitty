@@ -4,7 +4,6 @@
 import hashlib
 import logging
 import re
-import rsa
 import base64
 import psutil
 from uuid import uuid1
