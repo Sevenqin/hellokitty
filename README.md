@@ -22,7 +22,10 @@ python kittyrun.py
 ```
 To maintain your shell, you should open a new window,and deep into modules/monitor and run `python zookeeper.py`
 
-if you want to send flag to the awd platform,you should rewite the flag function which is in modules/flag/flag.py
+if you want to send flag to the awd platform,you should rewite the flag function which is in `modules/flag/flag.py`
 
 This is framework is based on requests multitheads, which is blocked.
 Considering to refactor it,with aiohttp asyncio, welcome to send issue,requirements. sevenqsh@gmail.com
+
+----
+Thank zhangxf55 for contribute a lot.
